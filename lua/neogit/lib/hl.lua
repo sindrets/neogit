@@ -163,8 +163,8 @@ function M.setup()
   local bg_normal = Color.from_hex(hl_bg_normal)
   local sign = bg_normal.lightness >= 0.5 and -1 or 1
 
-  local bg_hunk_header_hl = bg_normal:shade(0.15 * sign)
-  local bg_diff_context_hl = bg_normal:shade(0.075 * sign)
+  local bg_hunk_header_hl = bg_normal:clone():mod_value(sign * 0.2)
+  local bg_diff_context_hl = bg_normal:clone():mod_value(sign * 0.1)
 
   hl_store = {
     NeogitHunkHeader = { bg = bg_diff_context_hl:to_css() },
@@ -180,6 +180,22 @@ function M.setup()
       fg = M.get_fg("DiffDelete", false) or M.get_fg("diffRemoved") or hl_fg_normal,
       gui = M.get_gui("DiffDelete", false),
     },
+  }
+
+  local hl_bg_diff_add = Color.from_hex(hl_store.NeogitDiffAddHighlight.bg)
+  local hl_fg_diff_add = Color.from_hex(hl_store.NeogitDiffAddHighlight.fg)
+  local hl_bg_diff_del = Color.from_hex(hl_store.NeogitDiffDeleteHighlight.bg)
+  local hl_fg_diff_del = Color.from_hex(hl_store.NeogitDiffDeleteHighlight.fg)
+
+  hl_store.NeogitDiffAdd = {
+    bg = hl_bg_diff_add:blend(bg_normal, 0.4):to_css(),
+    fg = hl_fg_diff_add:blend(bg_normal, 0.4):to_css(),
+    gui = hl_store.NeogitDiffAddHighlight.gui,
+  }
+  hl_store.NeogitDiffDelete = {
+    bg = hl_bg_diff_del:blend(bg_normal, 0.4):to_css(),
+    fg = hl_fg_diff_del:blend(bg_normal, 0.4):to_css(),
+    gui = hl_store.NeogitDiffDeleteHighlight.gui,
   }
 
   for group, hl in pairs(hl_store) do
